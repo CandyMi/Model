@@ -17,10 +17,10 @@ return {
   -- Set
   ["Set"] = NULL,
   -- Integer
-	["TinyInt"] = NULL,
-	["SmallInt"] = NULL,
-	["Int"] = require "Model.Mysql.Field.Int",
-  ["BigInt"] = require "Model.Mysql.Field.BigInt",
+	["TinyInt"] = require "Model.MySQL.Field.TinyInt",
+	["SmallInt"] = require "Model.MySQL.Field.SmallInt",
+	["Int"] = require "Model.MySQL.Field.Int",
+  ["BigInt"] = require "Model.MySQL.Field.BigInt",
   -- Float
   ["float"] = NULL,
   ["double"] = NULL,

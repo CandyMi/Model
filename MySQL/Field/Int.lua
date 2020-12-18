@@ -30,12 +30,12 @@ function Int:verify(x)
 end
 
 -- 是否为主键
-function Int:is_primary( )
+function Int:isPrimary()
   return self.primary
 end
 
 -- 是否有索引
-function Int:is_index()
+function Int:isIndex()
   return self.index
 end
 

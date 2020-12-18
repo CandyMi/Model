@@ -6,9 +6,9 @@ local fmt = string.format
 local toint = math.tointeger
 local tconcat = table.concat
 
-local Int = class("BigInt")
+local BigInt = class("BigInt")
 
-function Int:ctor(opt)
+function BigInt:ctor(opt)
   self.auto_increment = opt.auto_increment   -- 自增
   self.comment = opt.comment                 -- 注释
   self.unsigned = opt.unsigned               -- 无符号
@@ -21,7 +21,7 @@ function Int:ctor(opt)
 end
 
 -- 验证字段传值有效
-function Int:verify(x)
+function BigInt:verify(x)
   x = assert(toint( x ), fmt("`%s` field was passed a invalid value(`BigInt`).", self.name))
   if self.unsigned then
     return x >= 0 and x <= 18446744073709551615
@@ -30,20 +30,20 @@ function Int:verify(x)
 end
 
 -- 是否为主键
-function Int:is_primary( )
+function BigInt:isPrimary()
   return self.primary
 end
 
 -- 是否有索引
-function Int:is_index()
+function BigInt:isIndex()
   return self.index
 end
 
 -- 将字段转DDL语句
-function Int:toSqlDefine()
+function BigInt:toSqlDefine()
   local DDL = {}
   DDL[#DDL+1] = fmt([[`%s`]], self.name)
-  DDL[#DDL+1] = self.unsigned and "INT UNSIGNED" or "INT"
+  DDL[#DDL+1] = self.unsigned and "BIGINT UNSIGNED" or "BIGINT"
   DDL[#DDL+1] = self.null and "NULL" or "NOT NULL"
   if self.default then
     if self.default == null then
@@ -62,5 +62,5 @@ function Int:toSqlDefine()
 end
 
 return function (meta)
-  return Int:new(assert(meta))
+  return BigInt:new(assert(meta))
 end
