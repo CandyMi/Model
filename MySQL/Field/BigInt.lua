@@ -21,7 +21,7 @@ function Int:ctor(opt)
 end
 
 -- 验证字段传值有效
-function Int:range(x)
+function Int:verify(x)
   x = assert(toint( x ), fmt("`%s` field was passed a invalid value(`BigInt`).", self.name))
   if self.unsigned then
     return x >= 0 and x <= 18446744073709551615
