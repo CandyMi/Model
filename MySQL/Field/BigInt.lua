@@ -29,6 +29,11 @@ function BigInt:verify(x)
   return x >= -9223372036854775808 and x <= 9223372036854775807
 end
 
+-- 是否为自增
+function BigInt:isAutoIncrement()
+  return self.auto_increment
+end
+
 -- 是否为主键
 function BigInt:isPrimary()
   return self.primary
@@ -41,7 +46,7 @@ end
 
 -- 将字段转DDL语句
 function BigInt:toSqlDefine()
-  local DDL = {}
+  local DDL = {" "}
   DDL[#DDL+1] = fmt([[`%s`]], self.name)
   DDL[#DDL+1] = self.unsigned and "BIGINT UNSIGNED" or "BIGINT"
   DDL[#DDL+1] = self.null and "NULL" or "NOT NULL"

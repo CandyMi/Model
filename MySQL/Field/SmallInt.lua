@@ -29,6 +29,11 @@ function SmallInt:verify(x)
   return x >= -32768 and x <= 32767
 end
 
+-- 是否为自增
+function SmallInt:isAutoIncrement()
+  return self.auto_increment
+end
+
 -- 是否为主键
 function SmallInt:isPrimary()
   return self.primary
@@ -41,7 +46,7 @@ end
 
 -- 将字段转DDL语句
 function SmallInt:toSqlDefine()
-  local DDL = {}
+  local DDL = {" "}
   DDL[#DDL+1] = fmt([[`%s`]], self.name)
   DDL[#DDL+1] = self.unsigned and "SMALLINT UNSIGNED" or "SMALLINT"
   DDL[#DDL+1] = self.null and "NULL" or "NOT NULL"

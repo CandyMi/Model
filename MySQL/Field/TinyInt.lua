@@ -29,6 +29,11 @@ function TinyInt:verify(x)
   return x >= -128 and x <= 127
 end
 
+-- 是否为自增
+function TinyInt:isAutoIncrement()
+  return self.auto_increment
+end
+
 -- 是否为主键
 function TinyInt:isPrimary()
   return self.primary
@@ -41,7 +46,7 @@ end
 
 -- 将字段转DDL语句
 function TinyInt:toSqlDefine()
-  local DDL = {}
+  local DDL = {" "}
   DDL[#DDL+1] = fmt([[`%s`]], self.name)
   DDL[#DDL+1] = self.unsigned and "TINYINT UNSIGNED" or "TINYINT"
   DDL[#DDL+1] = self.null and "NULL" or "NOT NULL"
