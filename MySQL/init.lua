@@ -65,10 +65,10 @@ function Model:InitTable()
     local with = { ngram = "WITH PARSER ngram"}
     -- 建立索引
     for i, item in ipairs(indexes) do
-      local t = assert(types[item.type], fmt("Invalid table `%s` Index type (Need `unique`, `normal`, `fulltext`).", self.tname))
-      local iname = assert(item.name, "Invalid Index Name.")
       local list = {}
-      assert(type(item.keys) == "table" or type(item.keys) == "string", fmt("Invalid Index key defined [%d].", i))
+      local t = assert(types[item.type], fmt("Invalid Index type(Need `unique`, `normal`, `fulltext`) In `%s` at index = [%d].", self.tname, i))
+      local iname = assert(item.name, fmt("Invalid Index-Name in `%s` at index = [%d].", self.tname, i))
+      assert(type(item.keys) == "table" or type(item.keys) == "string", fmt("Invalid Index Keys Name Defined In `%s` as index = [%d].", self.tname, i))
       local us = using[item.using] and " " .. using[item.using] or ""
       local wt = with[item.with] and " " .. with[item.with] or ""
       if type(item.keys) == "table" then
