@@ -14,8 +14,6 @@ function SmallInt:ctor(opt)
   self.unsigned = opt.unsigned               -- 无符号
   self.default = opt.default                 -- 默认值
   self.primary = opt.primary                 -- 主键
-  self.unique = opt.unique                   -- 唯一
-  self.index = opt.index                     -- 索引
   self.null = opt.null                       -- NULL
   self.name = opt.name                       -- 字段名
 end
@@ -37,11 +35,6 @@ end
 -- 是否为主键
 function SmallInt:isPrimary()
   return self.primary
-end
-
--- 是否有索引
-function SmallInt:isIndex()
-  return self.index
 end
 
 -- 将字段转DDL语句
