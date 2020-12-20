@@ -1,4 +1,4 @@
--- local NULL = null
+local NULL = null
 
 return {
   -- String
@@ -28,9 +28,9 @@ return {
 	["Int"] = require "Model.MySQL.Field.Int",
   ["BigInt"] = require "Model.MySQL.Field.BigInt",
   -- Float
-  ["float"] = NULL,
-  ["double"] = NULL,
-  ["decimal"] = NULL,
+  ["Float"] = NULL,
+  ["Double"] = NULL,
+  ["Decimal"] = NULL,
   -- DateTime
   ["Year"] = NULL,
   ["Date"] = NULL,
