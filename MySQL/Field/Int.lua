@@ -1,5 +1,6 @@
 local class = require "class"
 
+local type = type
 local assert = assert
 
 local fmt = string.format
@@ -9,6 +10,7 @@ local tconcat = table.concat
 local Int = class("Int")
 
 function Int:ctor(opt)
+  self.type = "integer"
   self.auto_increment = opt.auto_increment   -- 自增
   self.comment = opt.comment                 -- 注释
   self.unsigned = opt.unsigned               -- 无符号
@@ -40,15 +42,14 @@ end
 -- 将字段转DDL语句
 function Int:toSqlDefine()
   local DDL = {" "}
-  DDL[#DDL+1] = fmt([[`%s`]], self.name)
-  DDL[#DDL+1] = self.unsigned and "INT UNSIGNED" or "INT"
+  DDL[#DDL+1] = fmt([[`%s`]], assert(type(self.name) == 'string' and self.name ~= '' and self.name, "Invalid field name"))
+  DDL[#DDL+1] = self.unsigned and "INT UNSIGNED" or "TINYINT"
   DDL[#DDL+1] = self.null and "NULL" or "NOT NULL"
+  if self:isPrimary() then
+    assert(not self.null, "The `primary` field must be `non-NULL`.")
+  end
   if self.default then
-    if self.default == null then
-      DDL[#DDL+1] = "DEFAULT 'NULL'"
-    else
-      DDL[#DDL+1] = fmt("DEFAULT '%s'", self.default)
-    end
+    DDL[#DDL+1] = fmt("DEFAULT '%d'", assert(toint(self.default), fmt("`%s` field has invalid default value.", self.name)))
   end
   if self.auto_increment then
     DDL[#DDL+1] = "AUTO_INCREMENT"

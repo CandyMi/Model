@@ -33,7 +33,6 @@ function Model:InitTable()
   local engine = "InnoDB"
   local charset = "utf8mb4"
   local collate = "utf8mb4_unicode_ci"
-  local kmap = {}
   for idx, f in ipairs(self.fields) do
     if f:isPrimary() then
       primaries[#primaries+1] = {idx = idx, name = f.name}
@@ -43,7 +42,6 @@ function Model:InitTable()
       assert(not auto_increment, fmt("Multiple `auto_increment` fields are not allowed: [`%s`.`%s`].", self.tname, f.name))
       auto_increment = assert(math.tointeger(f.auto_increment), fmt("Invalid `auto_increment` field attr in [`%s`.%s`]", self.tname, f.name))
     end
-    kmap[f.name] = idx
     fDefines[#fDefines+1] = f:toSqlDefine()
   end
   -- 定义主键
@@ -62,7 +60,7 @@ function Model:InitTable()
     -- 索引类型
     local using = { btree = "USING BTREE", hash = "USING HASH", }
     -- 索引插件
-    local with = { ngram = "WITH PARSER ngram"}
+    local with = { ngram = "WITH PARSER ngram" }
     -- 建立索引
     for i, item in ipairs(indexes) do
       local list = {}
@@ -94,7 +92,7 @@ function Model:InitTable()
       collate = attr.collate
     end
   end
-	return fmt("CREATE TABLE IF NOT EXISTS `%s`(\n%s\n) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s AUTO_INCREMENT=%u", self.tname, table.concat(fDefines, ",\n"), engine, charset, collate, auto_increment)
+	return fmt("CREATE TABLE IF NOT EXISTS `%s`(\n%s\n) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s %s", self.tname, table.concat(fDefines, ",\n"), engine, charset, collate, auto_increment and fmt("AUTO_INCREMENT=%u", auto_increment) or "")
 end
 
 -- 查询语句
