@@ -20,17 +20,17 @@
 
   注意: 不支持空间数据结构与二维数据结构.
 
-## Table(tname, info) - 表结构模型
+## Table(tname, opt) - 表结构模型
 
   `MySQL`的表模型构造方法.
 
 ### 1. tname - 表名称
 
-  `tname` 是对表进行DML、DDL、DCL操作时使用的名称, 开发者应该传递一个符合`MySQL`的表命名规范的值.
+  `tname` 是对表进行`DML`、`DDL`、`DCL`操作时使用的名称, 开发者应该保证至少传递符合`MySQL`的表命名规范的值.
 
-### 2. info  - 表结构
+### 2. opt  - 表结构
 
-  `info`的内容定义了`tname`表对应的结构. 所有的表内包含的字段都至少需要存在一个, 并且还可以设置以下额外的属性:
+  `opt`的内容定义了`tname`表对应的结构. 所有的表内包含的字段都至少需要存在一个, 并且还可以设置以下额外的属性:
 
   * `indexes` - 表字段索引(可选);
 
@@ -38,9 +38,9 @@
 
   * `partitions` - 表分区属性(可选);
 
-#### 2.1 info[fields-index] - 表字段
+#### 2.1 opt[fields-index] - 表字段
 
-  所有的字段定义都是以数组的形式写入到`info`内的. 例如:
+  所有的字段定义都是以数组的形式写入到`opt`内的. 例如:
 
 ```lua
 local tab = Table("mytab", {
@@ -51,7 +51,7 @@ local tab = Table("mytab", {
 
   参考前面提到的内容可以获取到更多字段类型信息.
 
-#### 2.2 info.indexes - 表索引
+#### 2.2 opt.indexes - 表索引
 
   `indexes`展示了`Table`模型的索引应该如何配置:
   
@@ -67,7 +67,7 @@ local tab = Table("mytab", {
 
   设置为主键的字段只需要在字段参数属性内指定即可.
 
-#### 2.3 info.attr - 表属性
+#### 2.3 opt.attr - 表属性
 
   `attr`展示了`Table`模型的属性应该如何设置:
 
@@ -79,7 +79,7 @@ local tab = Table("mytab", {
 
   默认情况下在内部已经有`相对合适`的属性值被定义, 所以不建议开发者主动修改字符集与字符集排序、比较方式. 除非你清楚的知道自己在做什么并且确定你的修改更加合适且正确.
 
-#### 2.4 info.partitions - 表分区
+#### 2.4 opt.partitions - 表分区
 
   `partitions`展示了`Table`模型的分区应该如何设置: (暂未实现).
 
@@ -121,5 +121,5 @@ local tab = Table("mytab", {
 
 ### 3. Table:TruncateTable()
 
-  -- 截断/清空表
+  截断/清空表
 
