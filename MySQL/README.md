@@ -83,7 +83,7 @@ local tab = Table("mytab", {
 
   `partitions`展示了`Table`模型的分区应该如何设置: (暂未实现).
 
-### 3 完整示例
+### 3. 一份简单的示例
 
 ```lua
   local Field = require "Model.MySQL.Field"
@@ -92,28 +92,30 @@ local tab = Table("mytab", {
   local tab = Table("mytest", {
     Field.BigInt { name = "id", unsigned = true, primary = true, comment = "自增ID"},
     Field.Int { name = "user_id", unsigned = true, comment = "用户ID" },
+    -- 可选
     indexes = {
       { name = "uid_index", keys = "user_id", type = "normal" }
     }
+    -- 可选
     attr = { engine = "InnoDB", charset = "utf8mb4", collate = "utf8mb4_unicode_ci" },
   })
 ```
 
 ## 常用的方法
 
-  默认情况下, 模型定义都创建都是无害的! 但是你也可以指定参数来改变这一行为, 这通常在开发的时候比较有效.
+  默认情况下我们会将模型的行为都定义成`无害的`, 但是, 你也可以通过指定参数来改变这一行为, 这通常在开发的时候比较有用.
 
-  需要注意的是: 在生产环境下请不要使用危险的参数, 这将可能造成无法挽回的后果。
+  但是我们必须注意的是: 在生产环境下请不要使用下面危险的参数, 因为这在生产环境可能造成无法挽回的后果.
 
 ### 1. Table:CreateTable(opt)
 
-  构造方法创建的表`Model`在调用次方法后根据`opt`内包含的参数来指定行为. 注意: `opt`与内部所有的参数都是可选的.
+  构造方法创建的表`Model`在调用次方法后根据`opt`内包含的参数来指定行为. 注意: `opt`与下述参数都是可选的.
 
   * `opt.debug` - 只有当`debug == true`表达式为`true`的时候, 下面配置的参数才会生效.
 
   * `opt.dump` - 开启`debug`模式后生效; 此参数会将`CreateTable`方法的创建语句输出到`stdout`;
 
-  * `opt.drop` - 开启`debug`模式后生效; 此模式下每次都会`删除tname指定的表后, 再根据定义的表结构再重新创建一次.`
+  * `opt.drop` - 开启`debug`模式后生效; 此参数的定义将会导致每次都`删除tname指定的表后, 再根据定义的表结构再重新创建一次.`
 
 ### 2. Table:DeleteTable()
 
