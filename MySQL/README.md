@@ -2,7 +2,7 @@
 
   `MySQL`的模型库实现.
 
-## Field - 字段类型模型
+## Field(opt) - 字段类型模型
 
   目前已经实现的`MySQL`字段类型模型包括:
 
@@ -19,6 +19,22 @@
   * 特殊类型: `Json`;
 
   注意: 不支持空间数据结构与二维数据结构.
+
+### 1. opt - 类型参数
+
+  * `null` - 空值, 类型为:`boolean`; 主键、`binary`、`ENUM`、`SET`不可设置为空值;
+
+  * `primary` - 主键; 类型为:`boolean`; 任何字段类型都可以设置为主键或联合主键;
+
+  * `unsigned` - 无符号; 类型为:`boolean`; 只有`整数类型`与`小数类型`设置有效;
+
+  * `default` - 默认值; 类型为:`string`; `JSON`、`BLOB`、`TEXT`、`BINARY`等不可设置;
+
+  * `comment` - 注释; 类型为:`string`; 任何字段都可以设置注释, 也建议开发者注定编写好注释;
+
+  * `length` - 长度; 类型为:`integer`; 只有`char`、`varchar`、`binary`、`varbinary`设置有效;
+
+  * `auto_increment` - 自增; 类型为:`integer`; 
 
 ## Table(tname, opt) - 表结构模型
 
@@ -83,31 +99,17 @@ local tab = Table("mytab", {
 
   `partitions`展示了`Table`模型的分区应该如何设置: (暂未实现).
 
-### 3. 一份简单的示例
+### 3. 完整示例
 
-```lua
-local Field = require "Model.MySQL.Field"
-local Table = require "Model.MySQL.Table"
-
-local tab = Table("mytest", {
-  Field.BigInt { name = "id", unsigned = true, primary = true, comment = "自增ID"},
-  Field.Int { name = "user_id", unsigned = true, comment = "用户ID" },
-  -- 可选
-  indexes = {
-    { name = "uid_index", keys = "user_id", type = "normal" }
-  }
-  -- 可选
-  attr = { engine = "InnoDB", charset = "utf8mb4", collate = "utf8mb4_unicode_ci" },
-})
-```
+  请参考[这里](https://github.com/CandyMi/Model/blob/master/example.lua)
 
 ## 常用的方法
 
-  默认情况下我们会将模型的行为都定义成`无害的`, 但是, 你也可以通过指定参数来改变这一行为, 这通常在开发的时候比较有用.
+  默认情况下我们会将模型的行为都定义成`无害的`, 但是, 你也可以通过指定参数来改变这一行为, 这通常在本地开发的时候比较有用.
 
   但是我们必须注意的是: 在生产环境下请不要使用下面危险的参数, 因为这在生产环境可能造成无法挽回的后果.
 
-### 1. Table:CreateTable(opt)
+### 1. Table:CreateTable(opt) - 创建表
 
   构造方法创建的表`Model`在调用次方法后根据`opt`内包含的参数来指定行为. 注意: `opt`与下述参数都是可选的.
 
@@ -117,11 +119,11 @@ local tab = Table("mytest", {
 
   * `opt.drop` - 开启`debug`模式后生效; 此参数的定义将会导致每次都`删除tname指定的表后, 再根据定义的表结构再重新创建一次.`
 
-### 2. Table:DeleteTable()
+### 2. Table:DeleteTable() - 删除表
 
   删除`tname`指定的表.
 
-### 3. Table:TruncateTable()
+### 3. Table:TruncateTable() - 清空表
 
   截断/清空表
 
