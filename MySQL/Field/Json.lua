@@ -51,6 +51,11 @@ function Json:isPrimary()
   return self.primary
 end
 
+-- 字段位置记录
+function Json:setIndex(index)
+  self.index = index
+end
+
 -- 将字段转DDL语句
 function Json:toSqlDefine()
   local DDL = {" "}

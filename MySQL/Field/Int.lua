@@ -39,6 +39,11 @@ function Int:isPrimary()
   return self.primary
 end
 
+-- 字段位置记录
+function Int:setIndex(index)
+  self.index = index
+end
+
 -- 将字段转DDL语句
 function Int:toSqlDefine()
   local DDL = {" "}

@@ -36,6 +36,11 @@ function MediumBlob:isPrimary()
   return self.primary
 end
 
+-- 字段位置记录
+function MediumBlob:setIndex(index)
+  self.index = index
+end
+
 -- 将字段转DDL语句
 function MediumBlob:toSqlDefine()
   local DDL = {" "}

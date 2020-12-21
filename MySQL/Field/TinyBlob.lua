@@ -36,6 +36,11 @@ function TinyBlob:isPrimary()
   return self.primary
 end
 
+-- 字段位置记录
+function TinyBlob:setIndex(index)
+  self.index = index
+end
+
 -- 将字段转DDL语句
 function TinyBlob:toSqlDefine()
   local DDL = {" "}

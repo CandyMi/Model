@@ -36,6 +36,11 @@ function VarBinary:isPrimary()
   return self.primary
 end
 
+-- 字段位置记录
+function VarBinary:setIndex(index)
+  self.index = index
+end
+
 -- 将字段转DDL语句
 function VarBinary:toSqlDefine()
   local DDL = {" "}

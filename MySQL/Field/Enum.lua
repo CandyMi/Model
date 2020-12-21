@@ -41,6 +41,11 @@ function Enum:isPrimary()
   return self.primary
 end
 
+-- 字段位置记录
+function Enum:setIndex(index)
+  self.index = index
+end
+
 -- 将字段转DDL语句
 function Enum:toSqlDefine()
   local DDL = {" "}

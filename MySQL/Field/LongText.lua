@@ -35,6 +35,11 @@ function LongText:isPrimary()
   return self.primary
 end
 
+-- 字段位置记录
+function LongText:setIndex(index)
+  self.index = index
+end
+
 -- 将字段转DDL语句
 function LongText:toSqlDefine()
   local DDL = {" "}

@@ -35,6 +35,11 @@ function LongBlob:isPrimary()
   return self.primary
 end
 
+-- 字段位置记录
+function LongBlob:setIndex(index)
+  self.index = index
+end
+
 -- 将字段转DDL语句
 function LongBlob:toSqlDefine()
   local DDL = {" "}
