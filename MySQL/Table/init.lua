@@ -15,6 +15,8 @@ local Insert = require "Model.MySQL.Table.Insert"
 local Update = require "Model.MySQL.Table.Update"
 local Delete = require "Model.MySQL.Table.Delete"
 
+local Partition = require "Model.MySQL.Partition"
+
 local class = require "class"
 
 --- 对象模型
@@ -123,13 +125,17 @@ function MTable:CreateTable(opt)
       collate = fmt("COLLATE=%s", attr.collate)
     end
   end
-  -- 表分区
-  local partitions = ""
-  if type(self.partitions) == "table" then
-    partitions = ""
-  end
+  -- 自增适应
   if not auto_increment then
     auto_increment = ""
+  end
+  -- 表分区
+  local partitions = ""
+  if type(self.partitions) == "table" and #self.partitions > 1 then
+    local ptype = self.partitions.type
+    local ptypes = { range = true, hash = true, key = true }
+    local f = assert(ptypes[ptype], fmt("Invalid partition type in `%s`", self.tname))
+    partitions = tconcat(f(self))
   end
   -- DDL构建完成
   local sql = fmt("CREATE TABLE IF NOT EXISTS `%s`(\n%s\n) %s %s %s %s\n%s", self.tname, tconcat(fDefines, ",\n"), engine, charset, collate, auto_increment, partitions)
