@@ -10,10 +10,10 @@ local toint = math.tointeger
 local tconcat = table.concat
 
 -- 导入DML对象
-local Select = require "Model.Mysql.Table.Select"
-local Insert = require "Model.Mysql.Table.Insert"
-local Update = require "Model.Mysql.Table.Update"
-local Delete = require "Model.Mysql.Table.Delete"
+local Select = require "Model.MySQL.Table.Select"
+local Insert = require "Model.MySQL.Table.Insert"
+local Update = require "Model.MySQL.Table.Update"
+local Delete = require "Model.MySQL.Table.Delete"
 
 local class = require "class"
 
@@ -55,7 +55,7 @@ end
 ---@param opt table @可选的行为控制参数
 function MTable:CreateTable(opt)
   -- 自增属性
-  local auto_increment = ""
+  local auto_increment
   local fDefines = {}
   local primaries = {}
   for idx, f in ipairs(self.fields) do
@@ -127,6 +127,9 @@ function MTable:CreateTable(opt)
   local partitions = ""
   if type(self.partitions) == "table" then
     partitions = ""
+  end
+  if not auto_increment then
+    auto_increment = ""
   end
   -- DDL构建完成
   local sql = fmt("CREATE TABLE IF NOT EXISTS `%s`(\n%s\n) %s %s %s %s\n%s", self.tname, tconcat(fDefines, ",\n"), engine, charset, collate, auto_increment, partitions)
