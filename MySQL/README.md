@@ -28,9 +28,9 @@
 
   `tname` 是对表进行`DML`、`DDL`、`DCL`操作时使用的名称, 开发者应该保证至少传递符合`MySQL`的表命名规范的值.
 
-### 2. opt  - 表结构
+### 2. opt - 表结构
 
-  `opt`的内容定义了`tname`表对应的结构. 所有的表内包含的字段都至少需要存在一个, 并且还可以设置以下额外的属性:
+  `opt`的内容定义了`tname`表对应的结构. 表内包含的字段都至少需要存在一个, 并且开发者还可以根据实际情况设置额外的属性:
 
   * `indexes` - 表字段索引(可选);
 
@@ -86,19 +86,19 @@ local tab = Table("mytab", {
 ### 3. 一份简单的示例
 
 ```lua
-  local Field = require "Model.MySQL.Field"
-  local Table = require "Model.MySQL.Table"
+local Field = require "Model.MySQL.Field"
+local Table = require "Model.MySQL.Table"
 
-  local tab = Table("mytest", {
-    Field.BigInt { name = "id", unsigned = true, primary = true, comment = "自增ID"},
-    Field.Int { name = "user_id", unsigned = true, comment = "用户ID" },
-    -- 可选
-    indexes = {
-      { name = "uid_index", keys = "user_id", type = "normal" }
-    }
-    -- 可选
-    attr = { engine = "InnoDB", charset = "utf8mb4", collate = "utf8mb4_unicode_ci" },
-  })
+local tab = Table("mytest", {
+  Field.BigInt { name = "id", unsigned = true, primary = true, comment = "自增ID"},
+  Field.Int { name = "user_id", unsigned = true, comment = "用户ID" },
+  -- 可选
+  indexes = {
+    { name = "uid_index", keys = "user_id", type = "normal" }
+  }
+  -- 可选
+  attr = { engine = "InnoDB", charset = "utf8mb4", collate = "utf8mb4_unicode_ci" },
+})
 ```
 
 ## 常用的方法
