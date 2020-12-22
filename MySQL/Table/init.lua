@@ -19,42 +19,49 @@ local Partition = require "Model.MySQL.Partition"
 
 local class = require "class"
 
---- 对象模型
 ---@class MTable
 ---@field private fields     table[]                @表字段
 ---@field private tname      string                 @表名称
 ---@field private indexes    table[]                @表索引
----@field private attr       table<string, string>   @表属性
+---@field private attr       table<string, string>  @表属性
+---@field private db         table                  @表属性
 ---@field private partitions table                  @表分区(未实现)
-local MTable = class("MTable")
+local MTable= class("MTable")
 
 function MTable:ctor(opt)
   self.tname = opt.tname
+  self.db = nil
   self.attr = opt.attr
   self.fields = opt.fields
   self.indexes = opt.indexes
   self.partitions = opt.partitions
-  -- 内部映射
+  -- 字段名 -> 字段对象与索引的映射
   self.map = {}
   for index, field in ipairs(opt.fields) do
     self.map[field.name] = field:setIndex(index)
   end
 end
 
---- 传递数据库连接对象
+---传递数据库连接对象
 ---@param DB table @DB对象
 function MTable:setDB(DB)
   self.db = assert(type(DB) == "table" and type(DB.query) == "function" and DB, "Invalid DB Class.")
 end
 
+---获取数据库连接对象
+function MTable:getDB()
+  return self.db
+end
+
 ---@param sql string @SQL标准语法
 ---@return table|boolean @成功-返回`table`, 失败返回`nil`与`err`
 function MTable:query(sql)
-  return assert(self.db, "Before using the model, please pass the database object to the model."):query(sql)
+  return assert(self:getDB(), "Before using the model, please pass the database object to the model."):query(sql)
 end
 
--- 初始化表
+--- 初始化表
 ---@param opt table @可选的行为控制参数
+---@return table|boolean @成功-返回`table`, 失败返回`nil`与`err`
 function MTable:CreateTable(opt)
   -- 自增属性
   local auto_increment
@@ -132,10 +139,12 @@ function MTable:CreateTable(opt)
   -- 表分区
   local partitions = ""
   if type(self.partitions) == "table" and #self.partitions > 1 then
+    -- 分区方法名
     local ptype = self.partitions.type
+    -- 用分区方法名映射到分区函数
     local ptypes = { range = Partition.Range, hash = Partition.Hash, key = Partition.Key }
-    local f = assert(ptypes[ptype], fmt("Invalid partition type in `%s`", self.tname))
-    partitions = tconcat(f(self))
+    -- 拿到分区函数函数后, 传递self引用进行调用
+    partitions = assert(ptypes[ptype], fmt("Invalid partition type in `%s`", self.tname))(self)
   end
   -- DDL构建完成
   local sql = fmt("CREATE TABLE IF NOT EXISTS `%s`(\n%s\n) %s %s %s %s\n%s", self.tname, tconcat(fDefines, ",\n"), engine, charset, collate, auto_increment, partitions)
@@ -184,9 +193,9 @@ function MTable:delete()
   return Delete:new()
 end
 
---- 表模型->构造方法
+---表模型的构造方法
 ---@param tname  string
----@param fields Table <string, table | string>
+---@param fields Table<string, table|string> | table[]
 ---@return MTable
 return function (tname, fields)
   -- 表名称
