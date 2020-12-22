@@ -133,7 +133,7 @@ function MTable:CreateTable(opt)
   local partitions = ""
   if type(self.partitions) == "table" and #self.partitions > 1 then
     local ptype = self.partitions.type
-    local ptypes = { range = true, hash = true, key = true }
+    local ptypes = { range = Partition.Range, hash = Partition.Hash, key = Partition.Key }
     local f = assert(ptypes[ptype], fmt("Invalid partition type in `%s`", self.tname))
     partitions = tconcat(f(self))
   end
